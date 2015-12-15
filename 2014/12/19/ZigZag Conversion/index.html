@@ -6,7 +6,8 @@
   <title>ZigZag Conversion | ss的小屋</title>
   <meta name="author" content="jiashuai">
   
-  <meta name="description" content="最初的想法是模拟，按照顺序填充nRowslen(s)的矩阵，后来发现把2nRows-2个元素作为一个部分，可以把蛇形分为若干个部分每个部分中有 num = 2nRows-2 个元素，编号为0~2nRows-2 -1对于输出结果中的第i行（从0开始）">
+  <meta name="description" content="看了题解。。直接模拟最简单。。多占一点空间
+123456789101112131415161718192021222324252627class Solution:    def convert(self, s, nRows):        if nRows == 1:            re">
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -107,31 +108,8 @@
 	<div class="mypage">		
 	  		
 
-	  <div>最初的想法是模拟，按照顺序填充nRows<em>len(s)的矩阵，后来发现</em></div><br><div>把2nRows-2个元素作为一个部分，可以把蛇形分为若干个部分</div><br><div>每个部分中有 num = 2<em>nRows-2 个元素，编号为0~2</em>nRows-2 -1</div><br><div>对于输出结果中的第i行（从0开始）</div><br><a id="more"></a><br><div>有两类元素:</div><br><div>1.序号 % num = i or = 2<em>nRows - 2 - i（后一种可以理解为倒着数）</em></div><br><div>这样可以直接知道每一行中的元素</div><br><div>1、没有考虑只有一行的情况，被0除了</div><br><div>2、def convert(s, nRows):</div><br><div>    if nRows == 1:</div><br><div>        return s</div><br><div>    answer = “”</div><br><div>    num = 2  nRows - 2</div><br><div>    for i in range(0, nRows):</div><br><div>        line = [x for j, x in enumerate(s) if j % num == i or j % num == (2 <em> nRows - 2 - i)]</em></div><br><div>        answer += “”.join(line)</div><br><div>    return answer</div><br><div>    时间复杂度O(nRows  len(s))超时</div><br><div>看来需要把复杂度优化到O(len(s))，试想能不能直接算出结果，而不是由一个矩阵转换出来。</div><br><div>结果字符串分为三个部分</div><br><div>第一行有 len(s) / num 个元素</div><br><div>分别是 s[0] s[num] s[2<em>num]…</em></div><br><div>最后一行有 ( len(s)  - nRows + 1) / num 个元素</div><br><div>s[nRows -1] s[num+ nRows -1] s[2num + nRows -1]…</div><br><div></div><br><div>第i（1~ nRows-2）行有2<em>(len(s) - i)/num个元素</em></div><br><div>s[i] s[num -i] s[num+i] s[num + num - i]…</div><br><div></div><br><div></div><br><div>排在一起</div><br><div>s[0] s[num] s[2num]…s[i] s[num -i] s[num+i] s[num + num - i]…s[nRows -1] s[num+ nRows -1] s[2*num + nRows -1]…</div><br><div></div><br><div>AC</div><br><div></div><br><div>看了题解。。直接模拟最简单。。多占一点空间</div><br><div></div><br><div></div>
-
-<p>[code lang=”python”]<br>class Solution:<br>    def convert(self, s, nRows):<br>        if nRows == 1:<br>            return s<br>        num = 2 * nRows - 2<br>        answer = ‘’</p>
-<pre><code><span class="built_in">line</span> = s[<span class="number">0</span>::<span class="built_in">num</span>]
-answer += <span class="string">''</span>.join(<span class="built_in">line</span>)
-
-<span class="keyword">for</span> i <span class="operator">in</span> range(<span class="number">1</span>, nRows - <span class="number">1</span>):
-    line1 = s[i::<span class="built_in">num</span>]
-    line2 = s[<span class="built_in">num</span> - i::<span class="built_in">num</span>]
-    <span class="built_in">line</span> = [x , ]
-    x = i
-    y = <span class="built_in">num</span> - i
-    <span class="keyword">while</span> x &lt; <span class="built_in">len</span>(s):
-        answer += s[x]
-        <span class="comment"># There may be an x while y is absent, so we should determine seperately</span>
-        <span class="keyword">if</span> y &lt; <span class="built_in">len</span>(s):
-            answer += s[y]
-        x += <span class="built_in">num</span>
-        y += <span class="built_in">num</span>
-
-<span class="built_in">line</span> = s[nRows - <span class="number">1</span>::<span class="built_in">num</span>]
-answer += <span class="string">''</span>.join(<span class="built_in">line</span>)
-<span class="constant">return</span> answer
-</code></pre><p>[/code]</p>
-	  
+	  <p>看了题解。。直接模拟最简单。。多占一点空间</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">convert</span><span class="params">(self, s, nRows)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> nRows == <span class="number">1</span>:</span><br><span class="line">            <span class="keyword">return</span> s</span><br><span class="line">        num = <span class="number">2</span> * nRows - <span class="number">2</span></span><br><span class="line">        answer = <span class="string">''</span></span><br><span class="line"></span><br><span class="line">        line = s[<span class="number">0</span>::num]</span><br><span class="line">        answer += <span class="string">''</span>.join(line)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, nRows - <span class="number">1</span>):</span><br><span class="line">            line1 = s[i::num]</span><br><span class="line">            line2 = s[num - i::num]</span><br><span class="line">            line = [x , ]</span><br><span class="line">            x = i</span><br><span class="line">            y = num - i</span><br><span class="line">            <span class="keyword">while</span> x &lt; len(s):</span><br><span class="line">                answer += s[x]</span><br><span class="line">                <span class="comment"># There may be an x while y is absent, so we should determine seperately</span></span><br><span class="line">                <span class="keyword">if</span> y &lt; len(s):</span><br><span class="line">                    answer += s[y]</span><br><span class="line">                x += num</span><br><span class="line">                y += num</span><br><span class="line"></span><br><span class="line">        line = s[nRows - <span class="number">1</span>::num]</span><br><span class="line">        answer += <span class="string">''</span>.join(line)</span><br><span class="line">        <span class="keyword">return</span> answer</span><br></pre></td></tr></table></figure>	  
 	</div>
 
 	<div>
@@ -192,6 +170,14 @@ answer += <span class="string">''</span>.join(<span class="built_in">line</span>
 	
 
 	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/LeetCode简单题/">LeetCode简单题<span>10</span></a></li>
+    </ul>
+	</div>
 		
 
 	<!-- toc -->
