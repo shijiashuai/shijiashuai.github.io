@@ -1,0 +1,278 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>在Ubuntu上搭建PPTP VPN服务器 | ss的小屋</title>
+  <meta name="author" content="jiashuai">
+  
+  <meta name="description" content="如果你有一台在境外的VPS，按照本教程设置好PPTP服务器就可以通过它访问任何你想去的网站啦。">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="在Ubuntu上搭建PPTP VPN服务器"/>
+  <meta property="og:site_name" content="ss的小屋"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+      <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+	  <a class="navbar-brand" href="/">ss的小屋</a>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		  
+		  <li>
+			<a href="/archives" title="All the articles.">
+			  <i class="fa fa-archive"></i>Archives
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/categories" title="All the categories.">
+			  <i class="fa fa-folder"></i>Categories
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/about" title="About me.">
+			  <i class="fa fa-user"></i>About
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+
+
+	
+		<div class="page-header">		
+			<h1> 在Ubuntu上搭建PPTP VPN服务器</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div id="top_meta"></div>
+	<div class="col-md-9">
+	
+
+	<!-- content -->
+	<div class="mypage">		
+	  		
+
+	  <p>如果你有一台在境外的VPS，按照本教程设置好PPTP服务器就可以通过它访问任何你想去的网站啦。</p>
+<a id="more"></a>
+<h3 id="1-安装pptpd">1.安装pptpd</h3><p>输入以下命令即可</p>
+<pre><code>sudo apt-<span class="keyword">get</span> install pptpd
+</code></pre><h3 id="2-设置pptp">2.设置pptp</h3><p>打开<code>pptpd-options</code></p>
+<pre><code>sudo <span class="keyword">vim</span> /etc/ppp/pptpd-<span class="keyword">options</span>
+</code></pre><p>找到以下三行</p>
+<pre><code>refuse-pap
+refuse-chap
+refuse-mschap
+</code></pre><p>加“#”号注释掉，像这样</p>
+<pre><code><span class="preprocessor">#refuse-pap</span>
+<span class="preprocessor">#refuse-chap</span>
+<span class="preprocessor">#refuse-mschap</span>
+</code></pre><p>在文件最后添加下面的两行，用来配置DNS服务器，这里我选用了Google的DNS，也可以改成自己喜欢的</p>
+<pre><code>ms-dns <span class="number">8.8</span><span class="number">.8</span><span class="number">.8</span>
+ms-dns <span class="number">8.8</span><span class="number">.4</span><span class="number">.4</span>
+</code></pre><p>保存退出</p>
+<h3 id="3-设置网络地址">3.设置网络地址</h3><p>打开<code>pptpd.conf</code></p>
+<pre><code>sudo <span class="keyword">vim</span> /etc/pptpd.<span class="keyword">conf</span>
+</code></pre><p>在最后加上以下内容</p>
+<pre><code>localip YOUR_IP_ADDRESS
+remoteip <span class="number">192.168</span><span class="number">.0</span><span class="number">.100</span>-<span class="number">254</span>
+</code></pre><p>把<code>YOUR_IP_ADDRESS</code>替换成你的服务器的ip地址，比如我的是<code>104.236.156.229</code></p>
+<p><code>remoteip</code>是你要分配出去的ip地址范围，按自己喜好填就好</p>
+<p>添加完成以后保存退出</p>
+<h3 id="4-添加自己的vpn账户">4.添加自己的vpn账户</h3><p>打开<code>chap-secrets</code></p>
+<pre><code>sudo vim <span class="regexp">/etc/</span>ppp<span class="regexp">/chap-secrets</span>
+</code></pre><p>按以下格式添加账户，一行一个，注意空格</p>
+<pre><code>[Username] [Service] [Password] [Allowed IP Address]
+</code></pre><p>比如</p>
+<pre><code>ss pptpd sspwd <span class="keyword">*</span>
+</code></pre><p>保存退出，然后重启pptpd</p>
+<pre><code>sudo <span class="regexp">/etc/i</span>nit.d<span class="regexp">/pptpd restart</span>
+</code></pre><h3 id="5-设置ipv4包转发">5.设置ipv4包转发</h3><p>打开<code>sysctl.conf</code></p>
+<pre><code>sudo <span class="keyword">vim</span> /etc/sysctl.<span class="keyword">conf</span>
+</code></pre><p>找到这一行，把注释的“#”号去掉</p>
+<pre><code><span class="id">#net</span><span class="class">.ipv4</span><span class="class">.ip_forward</span>=<span class="number">1</span>
+</code></pre><p>改成像这样</p>
+<pre><code>net<span class="class">.ipv4</span><span class="class">.ip_forward</span>=<span class="number">1</span>
+</code></pre><p>保存退出，然后重新加载这个系统服务</p>
+<pre><code><span class="title">sudo</span> sysctl -p
+</code></pre><h3 id="6-设置NAT规则">6.设置NAT规则</h3><pre><code>sudo iptables -t nat -A POSTROUTING -s <span class="number">192.168</span><span class="number">.0</span><span class="number">.0</span>/<span class="number">24</span> -o eth0 -j MASQUERADE
+</code></pre><p>注意：如果你在第三部设置了跟我不一样的remoteip，那么这里也要作相应的更改。</p>
+<h2 id="至此，PPTP_VPN服务器就已经架好了。">至此，PPTP VPN服务器就已经架好了。</h2>	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+				
+    	<li class="prev"><a href="/2014/12/28/Remove Nth Node From End of List/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+  		
+
+        <li><a href="/archives"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/2014/12/26/Longest Common Prefix/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+<section id="comment">
+  <h2 class="title">Comments</h2>
+
+  
+</section>
+
+	</div> <!-- col-md-9/col-md-12 -->
+		
+	
+	<div id="side_meta">
+		<div class="col-md-3" id="post_meta"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2014-12-27 
+	</div>
+	
+
+	<!-- categories -->
+    
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#categorys"><i class="fa fa-folder"></i></a>	
+    <ul id="categorys" class="tag_box list-unstyled collapse in">
+          
+  <li>
+    <li><a href="/categories/教程/">教程<span>2</span></a></li>
+  </li>
+
+    </ul>
+	</div>
+	
+
+	<!-- tags -->
+		
+
+	<!-- toc -->
+	<div class="meta-widget">
+	
+	</div>
+	
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	</div>
+		
+
+</div><!-- row -->
+
+
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer> <p>
+  &copy; 2015 jiashuai
+  
+      with help from <a href="http://hexo.io/" target="_blank">Hexo</a> and <a href="http://getbootstrap.com/" target="_blank">Twitter Bootstrap</a>. Theme by <a href="http://github.com/wzpan/hexo-theme-freemind/">Freemind</a>.    
+</p> </footer>
+</div> <!-- container-narrow -->
+  
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/search.js"></script>
+<link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css"> 
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+
+   <script type="text/javascript">      
+     var search_path = "search.xml";
+	 if (search_path.length == 0) {
+	 	search_path = "search.xml";
+	 }
+	 var path = "/" + search_path;
+     searchFunc(path, 'local-search-input', 'local-search-result');
+   </script>
+
+</body>
+   </html>

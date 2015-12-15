@@ -1,0 +1,258 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>ZigZag Conversion | ss的小屋</title>
+  <meta name="author" content="jiashuai">
+  
+  <meta name="description" content="最初的想法是模拟，按照顺序填充nRowslen(s)的矩阵，后来发现把2nRows-2个元素作为一个部分，可以把蛇形分为若干个部分每个部分中有 num = 2nRows-2 个元素，编号为0~2nRows-2 -1对于输出结果中的第i行（从0开始）">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="ZigZag Conversion"/>
+  <meta property="og:site_name" content="ss的小屋"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+      <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+	  <a class="navbar-brand" href="/">ss的小屋</a>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		  
+		  <li>
+			<a href="/archives" title="All the articles.">
+			  <i class="fa fa-archive"></i>Archives
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/categories" title="All the categories.">
+			  <i class="fa fa-folder"></i>Categories
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/about" title="About me.">
+			  <i class="fa fa-user"></i>About
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+
+
+	
+		<div class="page-header">		
+			<h1> ZigZag Conversion</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div id="top_meta"></div>
+	<div class="col-md-9">
+	
+
+	<!-- content -->
+	<div class="mypage">		
+	  		
+
+	  <div>最初的想法是模拟，按照顺序填充nRows<em>len(s)的矩阵，后来发现</em></div><br><div>把2nRows-2个元素作为一个部分，可以把蛇形分为若干个部分</div><br><div>每个部分中有 num = 2<em>nRows-2 个元素，编号为0~2</em>nRows-2 -1</div><br><div>对于输出结果中的第i行（从0开始）</div><br><a id="more"></a><br><div>有两类元素:</div><br><div>1.序号 % num = i or = 2<em>nRows - 2 - i（后一种可以理解为倒着数）</em></div><br><div>这样可以直接知道每一行中的元素</div><br><div>1、没有考虑只有一行的情况，被0除了</div><br><div>2、def convert(s, nRows):</div><br><div>    if nRows == 1:</div><br><div>        return s</div><br><div>    answer = “”</div><br><div>    num = 2  nRows - 2</div><br><div>    for i in range(0, nRows):</div><br><div>        line = [x for j, x in enumerate(s) if j % num == i or j % num == (2 <em> nRows - 2 - i)]</em></div><br><div>        answer += “”.join(line)</div><br><div>    return answer</div><br><div>    时间复杂度O(nRows  len(s))超时</div><br><div>看来需要把复杂度优化到O(len(s))，试想能不能直接算出结果，而不是由一个矩阵转换出来。</div><br><div>结果字符串分为三个部分</div><br><div>第一行有 len(s) / num 个元素</div><br><div>分别是 s[0] s[num] s[2<em>num]…</em></div><br><div>最后一行有 ( len(s)  - nRows + 1) / num 个元素</div><br><div>s[nRows -1] s[num+ nRows -1] s[2num + nRows -1]…</div><br><div></div><br><div>第i（1~ nRows-2）行有2<em>(len(s) - i)/num个元素</em></div><br><div>s[i] s[num -i] s[num+i] s[num + num - i]…</div><br><div></div><br><div></div><br><div>排在一起</div><br><div>s[0] s[num] s[2num]…s[i] s[num -i] s[num+i] s[num + num - i]…s[nRows -1] s[num+ nRows -1] s[2*num + nRows -1]…</div><br><div></div><br><div>AC</div><br><div></div><br><div>看了题解。。直接模拟最简单。。多占一点空间</div><br><div></div><br><div></div>
+
+<p>[code lang=”python”]<br>class Solution:<br>    def convert(self, s, nRows):<br>        if nRows == 1:<br>            return s<br>        num = 2 * nRows - 2<br>        answer = ‘’</p>
+<pre><code><span class="built_in">line</span> = s[<span class="number">0</span>::<span class="built_in">num</span>]
+answer += <span class="string">''</span>.join(<span class="built_in">line</span>)
+
+<span class="keyword">for</span> i <span class="operator">in</span> range(<span class="number">1</span>, nRows - <span class="number">1</span>):
+    line1 = s[i::<span class="built_in">num</span>]
+    line2 = s[<span class="built_in">num</span> - i::<span class="built_in">num</span>]
+    <span class="built_in">line</span> = [x , ]
+    x = i
+    y = <span class="built_in">num</span> - i
+    <span class="keyword">while</span> x &lt; <span class="built_in">len</span>(s):
+        answer += s[x]
+        <span class="comment"># There may be an x while y is absent, so we should determine seperately</span>
+        <span class="keyword">if</span> y &lt; <span class="built_in">len</span>(s):
+            answer += s[y]
+        x += <span class="built_in">num</span>
+        y += <span class="built_in">num</span>
+
+<span class="built_in">line</span> = s[nRows - <span class="number">1</span>::<span class="built_in">num</span>]
+answer += <span class="string">''</span>.join(<span class="built_in">line</span>)
+<span class="constant">return</span> answer
+</code></pre><p>[/code]</p>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+				
+    	<li class="prev"><a href="/2014/12/19/Reverse Integer/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+  		
+
+        <li><a href="/archives"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+          <li class="next disabled"><a>Next<i class="fa fa-arrow-circle-o-right"></i></a></li>
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+<section id="comment">
+  <h2 class="title">Comments</h2>
+
+  
+</section>
+
+	</div> <!-- col-md-9/col-md-12 -->
+		
+	
+	<div id="side_meta">
+		<div class="col-md-3" id="post_meta"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2014-12-19 
+	</div>
+	
+
+	<!-- categories -->
+    
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#categorys"><i class="fa fa-folder"></i></a>	
+    <ul id="categorys" class="tag_box list-unstyled collapse in">
+          
+  <li>
+    <li><a href="/categories/LeetCode/">LeetCode<span>10</span></a></li>
+  </li>
+
+    </ul>
+	</div>
+	
+
+	<!-- tags -->
+		
+
+	<!-- toc -->
+	<div class="meta-widget">
+	
+	</div>
+	
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	</div>
+		
+
+</div><!-- row -->
+
+
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer> <p>
+  &copy; 2015 jiashuai
+  
+      with help from <a href="http://hexo.io/" target="_blank">Hexo</a> and <a href="http://getbootstrap.com/" target="_blank">Twitter Bootstrap</a>. Theme by <a href="http://github.com/wzpan/hexo-theme-freemind/">Freemind</a>.    
+</p> </footer>
+</div> <!-- container-narrow -->
+  
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/search.js"></script>
+<link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css"> 
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+
+   <script type="text/javascript">      
+     var search_path = "search.xml";
+	 if (search_path.length == 0) {
+	 	search_path = "search.xml";
+	 }
+	 var path = "/" + search_path;
+     searchFunc(path, 'local-search-input', 'local-search-result');
+   </script>
+
+</body>
+   </html>
