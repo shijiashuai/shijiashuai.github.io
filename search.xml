@@ -5,7 +5,7 @@
     
     <entry>
       <title><![CDATA[网页源码获取小程序]]></title>
-      <url>http://yoursite.com/2015/03/22/%E7%BD%91%E9%A1%B5%E6%BA%90%E7%A0%81%E8%8E%B7%E5%8F%96%E5%B0%8F%E7%A8%8B%E5%BA%8F/</url>
+      <url>http://jiashuai.me/2015/03/22/%E7%BD%91%E9%A1%B5%E6%BA%90%E7%A0%81%E8%8E%B7%E5%8F%96%E5%B0%8F%E7%A8%8B%E5%BA%8F/</url>
       <content type="html"><![CDATA[<p>最近需要编写一个获取网页源代码的小程序，本来以为是很简单的事情，没有想到却出了一些意想不到的问题。最简单的方法，只要几行代码就能搞定了</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">HttpURLConnection connection = (HttpURLConnection) <span class="keyword">new</span> URL(<span class="string">"http://www.163.com"</span>).openConnection();</span><br><span class="line">InputStream inputStream = connection.getInputStream();</span><br><span class="line"><span class="keyword">int</span> len;</span><br><span class="line">StringBuilder stringBuilder = <span class="keyword">new</span> StringBuilder();</span><br><span class="line"><span class="keyword">byte</span>[] bytes = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">1024</span>];</span><br><span class="line"><span class="keyword">while</span> ( (len = inputStream.read(bytes)) &gt; <span class="number">0</span>) &#123;</span><br><span class="line">    stringBuilder.append(<span class="keyword">new</span> String(bytes, <span class="number">0</span>, len));</span><br><span class="line">&#125;</span><br><span class="line">connection.disconnect();</span><br><span class="line">String text = stringBuilder.toString();</span><br><span class="line">System.out.println(text);</span><br></pre></td></tr></table></figure>
 <p>很快我就发现了问题，有的网页编码是<code>UTF-8</code>，有的是<code>gb2312</code>。可是编码必须在读入之间就指定，这就有了矛盾。有没有这样一种编码，它可以无损转换到其他任何编码呢，有——<code>8859_1</code>。</p>
@@ -25,7 +25,7 @@
     
     <entry>
       <title><![CDATA[Tomcat中的默认编码问题]]></title>
-      <url>http://yoursite.com/2015/03/18/Tomcat%E4%B8%AD%E7%9A%84%E9%BB%98%E8%AE%A4%E7%BC%96%E7%A0%81%E9%97%AE%E9%A2%98/</url>
+      <url>http://jiashuai.me/2015/03/18/Tomcat%E4%B8%AD%E7%9A%84%E9%BB%98%E8%AE%A4%E7%BC%96%E7%A0%81%E9%97%AE%E9%A2%98/</url>
       <content type="html"><![CDATA[<p>前段时间做了一个小项目，需要获取一个网页的HTML源码，然后在服务器上保存交给另一个数学模型处理。模型在单独测试的时候没出现什么问题，但是放到Tomcat中就突然出现了莫名其妙的错误。因为需要处理中文，经师兄提醒可能是编码的问题，于是设断<br>点到程序中查看，果然是，所有中文都变成了乱码。</p>
 <a id="more"></a>
 <p>首先，我想看看本地和Tomcat中的默认编码有什么不同，于是写了一行代码<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Charset.defaultCharset().displayName();</span><br></pre></td></tr></table></figure></p>
@@ -37,7 +37,7 @@
     
     <entry>
       <title><![CDATA[Remove Element]]></title>
-      <url>http://yoursite.com/2014/12/29/Remove%20Element/</url>
+      <url>http://jiashuai.me/2014/12/29/Remove%20Element/</url>
       <content type="html"><![CDATA[<p>移除list中指定元素，移除后不要求保持顺序，题目的主要要求在于原地修改，即in place<a id="more"></a></p>
 <p>可以借鉴堆排的想法，把最后一个元素拿过来覆盖掉要移除的元素，然后把list长度减一</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">__author__ = <span class="string">'shijiashuai'</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="comment"># @param    A       a list of integers</span></span><br><span class="line">    <span class="comment"># @param    elem    an integer, value need to be removed</span></span><br><span class="line">    <span class="comment"># @return an integer</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">removeElement</span><span class="params">(self, A, elem)</span>:</span></span><br><span class="line">        length = len(A)</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(length):</span><br><span class="line">            <span class="keyword">while</span> A[i] == elem <span class="keyword">and</span> i &lt; length:</span><br><span class="line">                length -= <span class="number">1</span></span><br><span class="line">                A[i] = A[length]</span><br><span class="line">        <span class="keyword">return</span> length</span><br></pre></td></tr></table></figure>
@@ -46,7 +46,7 @@
     
     <entry>
       <title><![CDATA[Remove Duplicates from Sorted Array]]></title>
-      <url>http://yoursite.com/2014/12/28/Remove%20Duplicates%20from%20Sorted%20Array/</url>
+      <url>http://jiashuai.me/2014/12/28/Remove%20Duplicates%20from%20Sorted%20Array/</url>
       <content type="html"><![CDATA[<p>一开始没看懂题目，原来要修改传入的A数组然后返回修改后的A数组长度</p>
 <a id="more"></a>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">__author__ = <span class="string">'shijiashuai'</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="comment"># @param a list of integers</span></span><br><span class="line">    <span class="comment"># @return an integer</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">removeDuplicates</span><span class="params">(self, A)</span>:</span></span><br><span class="line">        num = <span class="keyword">None</span></span><br><span class="line">        count = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> n <span class="keyword">in</span> A:</span><br><span class="line">            <span class="keyword">if</span> n != num:</span><br><span class="line">                A[count] = n</span><br><span class="line">                count += <span class="number">1</span></span><br><span class="line">                num = n</span><br><span class="line">        <span class="keyword">return</span> count</span><br></pre></td></tr></table></figure>]]></content>
@@ -54,7 +54,7 @@
     
     <entry>
       <title><![CDATA[Valid Parentheses]]></title>
-      <url>http://yoursite.com/2014/12/28/Valid%20Parentheses/</url>
+      <url>http://jiashuai.me/2014/12/28/Valid%20Parentheses/</url>
       <content type="html"><![CDATA[<p>经典栈应用</p>
 <a id="more"></a>
 <p>扫描串，遇到左括号就把它入栈，遇到右括号就从栈中弹出一个括号看是否配对，如果不配对或者此时栈空，返回False</p>
@@ -65,7 +65,7 @@
     
     <entry>
       <title><![CDATA[Remove Nth Node From End of List]]></title>
-      <url>http://yoursite.com/2014/12/28/Remove%20Nth%20Node%20From%20End%20of%20List/</url>
+      <url>http://jiashuai.me/2014/12/28/Remove%20Nth%20Node%20From%20End%20of%20List/</url>
       <content type="html"><![CDATA[<p>一道关于链表操作的题目，很有意思。题目要求我们移除链表的倒数第n个元素，遍历一遍就要完成。</p>
 <a id="more"></a>
 <p>关键的问题就在于，链表有多少个元素，我们在一开始是不知道的，难道必须要扫描到结尾然后倒着往回找第n个元素删除吗？</p>
@@ -82,7 +82,7 @@
     
     <entry>
       <title><![CDATA[在Ubuntu上搭建PPTP VPN服务器]]></title>
-      <url>http://yoursite.com/2014/12/27/%E5%9C%A8Ubuntu%E4%B8%8A%E6%90%AD%E5%BB%BAPPTP%20VPN%E6%9C%8D%E5%8A%A1%E5%99%A8/</url>
+      <url>http://jiashuai.me/2014/12/27/%E5%9C%A8Ubuntu%E4%B8%8A%E6%90%AD%E5%BB%BAPPTP%20VPN%E6%9C%8D%E5%8A%A1%E5%99%A8/</url>
       <content type="html"><![CDATA[<p>如果你有一台在境外的VPS，按照本教程设置好PPTP服务器就可以通过它访问任何你想去的网站啦。</p>
 <a id="more"></a>
 <h3 id="1-安装pptpd">1.安装pptpd</h3><p>输入以下命令即可</p>
@@ -132,7 +132,7 @@ remoteip <span class="number">192.168</span><span class="number">.0</span><span 
     
     <entry>
       <title><![CDATA[Longest Common Prefix]]></title>
-      <url>http://yoursite.com/2014/12/26/Longest%20Common%20Prefix/</url>
+      <url>http://jiashuai.me/2014/12/26/Longest%20Common%20Prefix/</url>
       <content type="html"><![CDATA[<p>第一次提交，没想到strs是空的情况（我直接取了strs的第一个元素）<br>第二次提交，没想到strs的第一个串可能不是最短的。</p>
 <a id="more"></a>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">__author__ = <span class="string">'shijiashuai'</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="comment"># @return a string</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">longestCommonPrefix</span><span class="params">(self, strs)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> strs == []:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">''</span></span><br><span class="line">        prefix = <span class="string">''</span></span><br><span class="line">        <span class="keyword">for</span> i, ch <span class="keyword">in</span> enumerate(strs[<span class="number">0</span>]):</span><br><span class="line">            <span class="keyword">for</span> s <span class="keyword">in</span> strs[<span class="number">1</span>:]:</span><br><span class="line">                <span class="keyword">if</span> len(s) &lt; i+<span class="number">1</span>:</span><br><span class="line">                    <span class="keyword">return</span> prefix</span><br><span class="line">                <span class="keyword">if</span> s[i] != ch:</span><br><span class="line">                    <span class="keyword">return</span> prefix</span><br><span class="line">            prefix += ch</span><br><span class="line">        <span class="keyword">return</span> prefix</span><br><span class="line">s = Solution()</span><br><span class="line"><span class="keyword">print</span> s.longestCommonPrefix([<span class="string">'a'</span>,<span class="string">'abc'</span>,<span class="string">'ab'</span>])</span><br></pre></td></tr></table></figure>]]></content>
@@ -140,7 +140,7 @@ remoteip <span class="number">192.168</span><span class="number">.0</span><span 
     
     <entry>
       <title><![CDATA[Roman to Integer]]></title>
-      <url>http://yoursite.com/2014/12/26/Roman%20to%20Integer/</url>
+      <url>http://jiashuai.me/2014/12/26/Roman%20to%20Integer/</url>
       <content type="html"><![CDATA[<p>罗马数字转成int，只要知道罗马数字的规则就可以了，没什么难度</p>
 <a id="more"></a>
 <p>罗马数字规则参见<a href="http://zh.wikipedia.org/wiki/%E7%BD%97%E9%A9%AC%E6%95%B0%E5%AD%97" target="_blank" rel="external">维基百科</a></p>
@@ -150,7 +150,7 @@ remoteip <span class="number">192.168</span><span class="number">.0</span><span 
     
     <entry>
       <title><![CDATA[Palindrome Number]]></title>
-      <url>http://yoursite.com/2014/12/26/Palindrome%20Number/</url>
+      <url>http://jiashuai.me/2014/12/26/Palindrome%20Number/</url>
       <content type="html"><![CDATA[<p>简单题，只是题目要求不能使用额外的空间，也就是说就不能把int转成string这样处理</p>
 <p>所有负整数都不算作回文数</p>
 <p>用整除和取模把每一位提取出来判断就可以了</p>
@@ -160,7 +160,7 @@ remoteip <span class="number">192.168</span><span class="number">.0</span><span 
     
     <entry>
       <title><![CDATA[怎样在Ubuntu14.04上安装Linux,Apache,MySQL,PHP(LAMP)]]></title>
-      <url>http://yoursite.com/2014/12/21/%E6%80%8E%E6%A0%B7%E5%9C%A8Ubuntu14.04%E4%B8%8A%E5%AE%89%E8%A3%85Linux,Apache,MySQL,PHP(LAMP)/</url>
+      <url>http://jiashuai.me/2014/12/21/%E6%80%8E%E6%A0%B7%E5%9C%A8Ubuntu14.04%E4%B8%8A%E5%AE%89%E8%A3%85Linux,Apache,MySQL,PHP(LAMP)/</url>
       <content type="html"><![CDATA[<h2 id="介绍">介绍</h2><p>一个“LAMP”栈是一组通常安装在一起的开源软件，它可以让一台服务器运行动态网站和web应用。LAMP这个术语实际上是一个首字母缩略词，他们分别代表了Linux操作系统，Apache web服务器，存储网站数据的MySQL数据库和处理动态内容的PHP。</p>
 <p>在这个教程里，我们将会在Ubuntu 14.04上安装LAMP栈，Ubuntu将会实现我们的第一个需求：一个Linux操作系统。</p>
 <a id="more"></a>
@@ -240,7 +240,7 @@ sudo apt-<span class="built_in">get</span> install apache2
     
     <entry>
       <title><![CDATA[String to Integer]]></title>
-      <url>http://yoursite.com/2014/12/19/String%20to%20Integer/</url>
+      <url>http://jiashuai.me/2014/12/19/String%20to%20Integer/</url>
       <content type="html"><![CDATA[<p>很简单的一道题，只是考验细节</p>
 <a id="more"></a>
 <ol>
@@ -256,7 +256,7 @@ sudo apt-<span class="built_in">get</span> install apache2
     
     <entry>
       <title><![CDATA[Reverse Integer]]></title>
-      <url>http://yoursite.com/2014/12/19/Reverse%20Integer/</url>
+      <url>http://jiashuai.me/2014/12/19/Reverse%20Integer/</url>
       <content type="html"><![CDATA[<p>很简单的题目</p>
 <a id="more"></a> 
 <p>第一次提交出错了 因为题目中说如果逆序后的数溢出了，需要返回0<br>改了又错了 位运算的优先级居然比加减法还要低</p>
@@ -267,7 +267,7 @@ sudo apt-<span class="built_in">get</span> install apache2
     
     <entry>
       <title><![CDATA[ZigZag Conversion]]></title>
-      <url>http://yoursite.com/2014/12/19/ZigZag%20Conversion/</url>
+      <url>http://jiashuai.me/2014/12/19/ZigZag%20Conversion/</url>
       <content type="html"><![CDATA[<p>看了题解。。直接模拟最简单。。多占一点空间</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">convert</span><span class="params">(self, s, nRows)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> nRows == <span class="number">1</span>:</span><br><span class="line">            <span class="keyword">return</span> s</span><br><span class="line">        num = <span class="number">2</span> * nRows - <span class="number">2</span></span><br><span class="line">        answer = <span class="string">''</span></span><br><span class="line"></span><br><span class="line">        line = s[<span class="number">0</span>::num]</span><br><span class="line">        answer += <span class="string">''</span>.join(line)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, nRows - <span class="number">1</span>):</span><br><span class="line">            line1 = s[i::num]</span><br><span class="line">            line2 = s[num - i::num]</span><br><span class="line">            line = [x , ]</span><br><span class="line">            x = i</span><br><span class="line">            y = num - i</span><br><span class="line">            <span class="keyword">while</span> x &lt; len(s):</span><br><span class="line">                answer += s[x]</span><br><span class="line">                <span class="comment"># There may be an x while y is absent, so we should determine seperately</span></span><br><span class="line">                <span class="keyword">if</span> y &lt; len(s):</span><br><span class="line">                    answer += s[y]</span><br><span class="line">                x += num</span><br><span class="line">                y += num</span><br><span class="line"></span><br><span class="line">        line = s[nRows - <span class="number">1</span>::num]</span><br><span class="line">        answer += <span class="string">''</span>.join(line)</span><br><span class="line">        <span class="keyword">return</span> answer</span><br></pre></td></tr></table></figure>]]></content>
     </entry>
