@@ -1,0 +1,278 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>在Ubuntu上搭建Shadowsocks服务器以及优化 | ss的小屋</title>
+  <meta name="author" content="jiashuai">
+  
+  <meta name="description" content="从前科学上网一直使用的是vpnso,打开网页速度尚可，但是感觉带宽只有1Mbps左右，看YouTube视频和下载就有些吃力了。毕竟对于科学上网来说，VPN还是有些大材小用。
+ Shadowsocks这种轻量级的代理更适合科学上网。要搭建Shadowsocks服务器，首先你要有一台国外的VPS，这里我选用了DigitalOcean的Sinapore节点，在优化以后可以达到8Mbps~10Mbps的带宽，还是很可观的。">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="在Ubuntu上搭建Shadowsocks服务器以及优化"/>
+  <meta property="og:site_name" content="ss的小屋"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <!-- <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css"> -->
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+      <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+	  <a class="navbar-brand" href="/">ss的小屋</a>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		  
+		  <li>
+			<a href="/archives" title="All the articles.">
+			  <i class="fa fa-archive"></i>Archives
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/categories" title="All the categories.">
+			  <i class="fa fa-folder"></i>Categories
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/about" title="About me.">
+			  <i class="fa fa-user"></i>About
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+
+
+	
+		<div class="page-header">		
+			<h1> 在Ubuntu上搭建Shadowsocks服务器以及优化</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div id="top_meta"></div>
+	<div class="col-md-9">
+	
+
+	<!-- content -->
+	<div class="mypage">		
+	  		
+
+	  <p>从前科学上网一直使用的是<a href="http://vpnso.com" target="_blank" rel="external">vpnso</a>,打开网页速度尚可，但是感觉带宽只有1Mbps左右，看YouTube视频和下载就有些吃力了。<br>毕竟对于科学上网来说，VPN还是有些大材小用。</p>
+<p> Shadowsocks这种轻量级的代理更适合科学上网。要搭建Shadowsocks服务器，首先你要有一台国外的VPS，这里我选用了DigitalOcean的Sinapore节点，在优化以后可以达到8Mbps~10Mbps的带宽，还是很可观的。<br><a id="more"></a></p>
+<h2 id="1-_安装Shadowsocks">1. 安装Shadowsocks</h2><p>安装Shadowsocks很简单，首先安装<code>pip</code></p>
+<pre><code>apt-<span class="built_in">get</span> install <span class="keyword">python</span>-pip
+</code></pre><p>然后使用<code>pip</code>安装Shadowsocks</p>
+<pre><code>pip <span class="keyword">install</span> shadowsocks
+</code></pre><p>安装完成</p>
+<h2 id="2-_Shadowsocks的配置和使用">2. Shadowsocks的配置和使用</h2><p>推荐使用配置文件的方式启动，方便以后的查看和修改<code>vim /etc/shadowsocks.json</code></p>
+<p>配置文件这样写<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="string">"server"</span>:<span class="string">"my_server_ip"</span>,</span><br><span class="line">    <span class="string">"server_port"</span>:<span class="number">8388</span>,</span><br><span class="line">    <span class="string">"local_address"</span>: <span class="string">"127.0.0.1"</span>,</span><br><span class="line">    <span class="string">"local_port"</span>:<span class="number">1080</span>,</span><br><span class="line">    <span class="string">"password"</span>:<span class="string">"mypassword"</span>,</span><br><span class="line">    <span class="string">"timeout"</span>:<span class="number">300</span>,</span><br><span class="line">    <span class="string">"method"</span>:<span class="string">"aes-256-cfb"</span>,</span><br><span class="line">    <span class="string">"fast_open"</span>: false</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>完整的配置文件写法见<a href="https://github.com/shadowsocks/shadowsocks/wiki/Configuration-via-Config-File" target="_blank" rel="external">这里</a></p>
+</blockquote>
+<p>启动和停止Shadowsocks</p>
+<pre><code>shadowsocks -c /etc/shadowsocks.json -d <span class="operator"><span class="keyword">start</span>
+shadowsocks -<span class="keyword">d</span> <span class="keyword">stop</span></span>
+</code></pre><p><code>-d</code>参数的作用是把shadowsocks作为后台daemon程序运行</p>
+<blockquote>
+<p>shadowsocks目前支持Windows/OSX/iOS/Android，客户端在<a href="https://github.com/shadowsocks/shadowsocks/wiki/Ports-and-Clients" target="_blank" rel="external">这里</a></p>
+</blockquote>
+<h2 id="3-_Shadowsocks的优化">3. Shadowsocks的优化</h2><p>推荐使用<strong><a href="http://my.serverspeeder.com/w.do?m=lsl" target="_blank" rel="external">锐速</a></strong></p>
+<blockquote>
+<p>锐速（ServerSpeeder）加速软件是一种基于ZETATCP加速引擎的软件，可以起到显著加速效果的TCP加速技术.</p>
+</blockquote>
+<p>首先确认你的Linux内核在锐速的<a href="http://my.serverspeeder.com/ls.do?m=availables" target="_blank" rel="external">支持列表</a>里，然后去注册一个锐速帐号</p>
+<p>安装</p>
+<pre><code>wget http:<span class="comment">//my.serverspeeder.com/d/ls/serverSpeederInstaller.tar.gz</span>
+tar -xzf serverSpeederInstaller<span class="class">.tar</span><span class="class">.gz</span>
+bash serverSpeederInstaller.sh
+</code></pre><p>输入用户名和密码以后一路enter确认用默认参数，最后会问你是否要开机启动和现在启动，推荐打开。</p>
+<p>输入<code>lsmod</code>看到有<code>appex0</code>模块就是加速成功了。</p>
+<p>我们继续修改一下锐速的参数<code>vim /serverspeeder/etc/config</code></p>
+<p>其中<code>advinacc</code>,<code>maxmode</code>都改为1，DigitalOcean的网卡是支持<code>rsc</code>和<code>gso</code>加速的，我们也把它打开</p>
+<p>最后重新加载一下配置</p>
+<pre><code><span class="title">service</span> serverSpeeder reload
+</code></pre><p>打开YouTube测一下速，1080p视频几乎不需要缓冲<br><img src="/img/youtube1080p.png" alt="youtube"></p>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+		
+          <li class="prev disabled"><a><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+        
+
+        <li><a href="/archives"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/2015/03/22/网页源码获取小程序/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+<section id="comment">
+  <h2 class="title">Comments</h2>
+
+  
+</section>
+
+	</div> <!-- col-md-9/col-md-12 -->
+		
+	
+	<div id="side_meta">
+		<div class="col-md-3" id="post_meta"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2015-12-16 
+	</div>
+	
+
+	<!-- categories -->
+    
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#categorys"><i class="fa fa-folder"></i></a>	
+    <ul id="categorys" class="tag_box list-unstyled collapse in">
+          
+  <li>
+    <li><a href="/categories/教程/">教程<span>3</span></a></li>
+  </li>
+
+    </ul>
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/Shadowsocks/">Shadowsocks<span>1</span></a></li> <li><a href="/tags/科学上网/">科学上网<span>2</span></a></li>
+    </ul>
+	</div>
+		
+
+	<!-- toc -->
+	<div class="meta-widget">
+	
+	</div>
+	
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	</div>
+		
+
+</div><!-- row -->
+
+
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer> <p>
+  &copy; 2015 jiashuai
+  
+      with help from <a href="http://hexo.io/" target="_blank">Hexo</a> and <a href="http://getbootstrap.com/" target="_blank">Twitter Bootstrap</a>. Theme by <a href="http://github.com/wzpan/hexo-theme-freemind/">Freemind</a>.    
+</p> </footer>
+</div> <!-- container-narrow -->
+  
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/search.js"></script>
+<link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css"> 
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+
+   <script type="text/javascript">      
+     var search_path = "search.xml";
+	 if (search_path.length == 0) {
+	 	search_path = "search.xml";
+	 }
+	 var path = "/" + search_path;
+     searchFunc(path, 'local-search-input', 'local-search-result');
+   </script>
+
+</body>
+   </html>
