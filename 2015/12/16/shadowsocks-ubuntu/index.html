@@ -111,19 +111,15 @@
 	  <p>从前科学上网一直使用的是<a href="http://vpnso.com" target="_blank" rel="external">vpnso</a>,打开网页速度尚可，但是感觉带宽只有1Mbps左右，看YouTube视频和下载就有些吃力了。<br>毕竟对于科学上网来说，VPN还是有些大材小用。</p>
 <p> Shadowsocks这种轻量级的代理更适合科学上网。要搭建Shadowsocks服务器，首先你要有一台国外的VPS，这里我选用了DigitalOcean的Sinapore节点，在优化以后可以达到8Mbps~10Mbps的带宽，还是很可观的。<br><a id="more"></a></p>
 <h2 id="1-_安装Shadowsocks">1. 安装Shadowsocks</h2><p>安装Shadowsocks很简单，首先安装<code>pip</code></p>
-<pre><code>apt-<span class="built_in">get</span> install <span class="keyword">python</span>-pip
-</code></pre><p>然后使用<code>pip</code>安装Shadowsocks</p>
-<pre><code>pip <span class="keyword">install</span> shadowsocks
-</code></pre><p>安装完成</p>
+<p><pre>apt-get install python-pip</pre><br>然后使用<code>pip</code>安装Shadowsocks</p>
+<p><pre>pip install shadowsocks</pre><br>安装完成</p>
 <h2 id="2-_Shadowsocks的配置和使用">2. Shadowsocks的配置和使用</h2><p>推荐使用配置文件的方式启动，方便以后的查看和修改<code>vim /etc/shadowsocks.json</code></p>
-<p>配置文件这样写<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="string">"server"</span>:<span class="string">"my_server_ip"</span>,</span><br><span class="line">    <span class="string">"server_port"</span>:<span class="number">8388</span>,</span><br><span class="line">    <span class="string">"local_address"</span>: <span class="string">"127.0.0.1"</span>,</span><br><span class="line">    <span class="string">"local_port"</span>:<span class="number">1080</span>,</span><br><span class="line">    <span class="string">"password"</span>:<span class="string">"mypassword"</span>,</span><br><span class="line">    <span class="string">"timeout"</span>:<span class="number">300</span>,</span><br><span class="line">    <span class="string">"method"</span>:<span class="string">"aes-256-cfb"</span>,</span><br><span class="line">    <span class="string">"fast_open"</span>: false</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>配置文件这样写<br><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="string">"server"</span>:<span class="string">"my_server_ip"</span>,</span><br><span class="line">    <span class="string">"server_port"</span>:<span class="number">8388</span>,</span><br><span class="line">    <span class="string">"local_address"</span>: <span class="string">"127.0.0.1"</span>,</span><br><span class="line">    <span class="string">"local_port"</span>:<span class="number">1080</span>,</span><br><span class="line">    <span class="string">"password"</span>:<span class="string">"mypassword"</span>,</span><br><span class="line">    <span class="string">"timeout"</span>:<span class="number">300</span>,</span><br><span class="line">    <span class="string">"method"</span>:<span class="string">"aes-256-cfb"</span>,</span><br><span class="line">    <span class="string">"fast_open"</span>: false</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <blockquote>
 <p>完整的配置文件写法见<a href="https://github.com/shadowsocks/shadowsocks/wiki/Configuration-via-Config-File" target="_blank" rel="external">这里</a></p>
 </blockquote>
-<p>启动和停止Shadowsocks</p>
-<pre><code>shadowsocks -c /etc/shadowsocks.json -d <span class="operator"><span class="keyword">start</span>
-shadowsocks -<span class="keyword">d</span> <span class="keyword">stop</span></span>
-</code></pre><p><code>-d</code>参数的作用是把shadowsocks作为后台daemon程序运行</p>
+<p>启动和停止Shadowsocks<br><figure class="highlight"><table><tr><td class="code"><pre><span class="line">shadowsocks -c /etc/shadowsocks.json -d start&#10;shadowsocks -d stop</span><br></pre></td></tr></table></figure></p>
+<p><code>-d</code>参数的作用是把shadowsocks作为后台daemon程序运行</p>
 <blockquote>
 <p>shadowsocks目前支持Windows/OSX/iOS/Android，客户端在<a href="https://github.com/shadowsocks/shadowsocks/wiki/Ports-and-Clients" target="_blank" rel="external">这里</a></p>
 </blockquote>
@@ -132,17 +128,13 @@ shadowsocks -<span class="keyword">d</span> <span class="keyword">stop</span></s
 <p>锐速（ServerSpeeder）加速软件是一种基于ZETATCP加速引擎的软件，可以起到显著加速效果的TCP加速技术.</p>
 </blockquote>
 <p>首先确认你的Linux内核在锐速的<a href="http://my.serverspeeder.com/ls.do?m=availables" target="_blank" rel="external">支持列表</a>里，然后去注册一个锐速帐号</p>
-<p>安装</p>
-<pre><code>wget http:<span class="comment">//my.serverspeeder.com/d/ls/serverSpeederInstaller.tar.gz</span>
-tar -xzf serverSpeederInstaller<span class="class">.tar</span><span class="class">.gz</span>
-bash serverSpeederInstaller.sh
-</code></pre><p>输入用户名和密码以后一路enter确认用默认参数，最后会问你是否要开机启动和现在启动，推荐打开。</p>
+<p>安装<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">wget http://my.serverspeeder.com/d/ls/serverSpeederInstaller.tar.gz&#10;tar -xzf serverSpeederInstaller.tar.gz&#10;bash serverSpeederInstaller.sh</span><br></pre></td></tr></table></figure></p>
+<p>输入用户名和密码以后一路enter确认用默认参数，最后会问你是否要开机启动和现在启动，推荐打开。</p>
 <p>输入<code>lsmod</code>看到有<code>appex0</code>模块就是加速成功了。</p>
 <p>我们继续修改一下锐速的参数<code>vim /serverspeeder/etc/config</code></p>
 <p>其中<code>advinacc</code>,<code>maxmode</code>都改为1，DigitalOcean的网卡是支持<code>rsc</code>和<code>gso</code>加速的，我们也把它打开</p>
 <p>最后重新加载一下配置</p>
-<pre><code><span class="title">service</span> serverSpeeder reload
-</code></pre><p>打开YouTube测一下速，1080p视频几乎不需要缓冲<br><img src="/img/youtube1080p.png" alt="youtube"></p>
+<p><pre>service serverSpeeder reload</pre><br>打开YouTube测一下速，1080p视频几乎不需要缓冲<br><img src="/img/youtube1080p.png" alt="youtube"></p>
 	  
 	</div>
 

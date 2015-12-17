@@ -110,48 +110,33 @@
 	  <p>如果你有一台在境外的VPS，按照本教程设置好PPTP服务器就可以通过它访问任何你想去的网站啦。</p>
 <a id="more"></a>
 <h3 id="1-安装pptpd">1.安装pptpd</h3><p>输入以下命令即可</p>
-<pre><code>sudo apt-<span class="keyword">get</span> install pptpd
-</code></pre><h3 id="2-设置pptp">2.设置pptp</h3><p>打开<code>pptpd-options</code></p>
-<pre><code>sudo <span class="keyword">vim</span> /etc/ppp/pptpd-<span class="keyword">options</span>
-</code></pre><p>找到以下三行</p>
-<pre><code>refuse-pap
-refuse-chap
-refuse-mschap
-</code></pre><p>加“#”号注释掉，像这样</p>
-<pre><code><span class="preprocessor">#refuse-pap</span>
-<span class="preprocessor">#refuse-chap</span>
-<span class="preprocessor">#refuse-mschap</span>
-</code></pre><p>在文件最后添加下面的两行，用来配置DNS服务器，这里我选用了Google的DNS，也可以改成自己喜欢的</p>
-<pre><code>ms-dns <span class="number">8.8</span><span class="number">.8</span><span class="number">.8</span>
-ms-dns <span class="number">8.8</span><span class="number">.4</span><span class="number">.4</span>
-</code></pre><p>保存退出</p>
+<pre>sudo apt-get install pptpd</pre>
+### 2.设置pptp
+打开`pptpd-options`
+<pre>sudo vim /etc/ppp/pptpd-options</pre>
+
+<p>找到以下三行<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">refuse-pap&#10;refuse-chap&#10;refuse-mschap</span><br></pre></td></tr></table></figure></p>
+<p>加“#”号注释掉，像这样<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#refuse-pap&#10;#refuse-chap&#10;#refuse-mschap</span><br></pre></td></tr></table></figure></p>
+<p>在文件最后添加下面的两行，用来配置DNS服务器，这里我选用了Google的DNS，也可以改成自己喜欢的<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ms-dns 8.8.8.8&#10;ms-dns 8.8.4.4</span><br></pre></td></tr></table></figure></p>
+<p>保存退出</p>
 <h3 id="3-设置网络地址">3.设置网络地址</h3><p>打开<code>pptpd.conf</code></p>
-<pre><code>sudo <span class="keyword">vim</span> /etc/pptpd.<span class="keyword">conf</span>
-</code></pre><p>在最后加上以下内容</p>
-<pre><code>localip YOUR_IP_ADDRESS
-remoteip <span class="number">192.168</span><span class="number">.0</span><span class="number">.100</span>-<span class="number">254</span>
-</code></pre><p>把<code>YOUR_IP_ADDRESS</code>替换成你的服务器的ip地址，比如我的是<code>104.236.156.229</code></p>
+<p><pre>sudo vim /etc/pptpd.conf</pre><br>在最后加上以下内容<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">localip YOUR_IP_ADDRESS&#10;remoteip 192.168.0.100-254</span><br></pre></td></tr></table></figure></p>
+<p>把<code>YOUR_IP_ADDRESS</code>替换成你的服务器的ip地址，比如我的是<code>104.236.156.229</code></p>
 <p><code>remoteip</code>是你要分配出去的ip地址范围，按自己喜好填就好</p>
 <p>添加完成以后保存退出</p>
 <h3 id="4-添加自己的vpn账户">4.添加自己的vpn账户</h3><p>打开<code>chap-secrets</code></p>
-<pre><code>sudo vim <span class="regexp">/etc/</span>ppp<span class="regexp">/chap-secrets</span>
-</code></pre><p>按以下格式添加账户，一行一个，注意空格</p>
-<pre><code>[Username] [Service] [Password] [Allowed IP Address]
-</code></pre><p>比如</p>
-<pre><code>ss pptpd sspwd <span class="keyword">*</span>
-</code></pre><p>保存退出，然后重启pptpd</p>
-<pre><code>sudo <span class="regexp">/etc/i</span>nit.d<span class="regexp">/pptpd restart</span>
-</code></pre><h3 id="5-设置ipv4包转发">5.设置ipv4包转发</h3><p>打开<code>sysctl.conf</code></p>
-<pre><code>sudo <span class="keyword">vim</span> /etc/sysctl.<span class="keyword">conf</span>
-</code></pre><p>找到这一行，把注释的“#”号去掉</p>
-<pre><code><span class="id">#net</span><span class="class">.ipv4</span><span class="class">.ip_forward</span>=<span class="number">1</span>
-</code></pre><p>改成像这样</p>
-<pre><code>net<span class="class">.ipv4</span><span class="class">.ip_forward</span>=<span class="number">1</span>
-</code></pre><p>保存退出，然后重新加载这个系统服务</p>
-<pre><code><span class="title">sudo</span> sysctl -p
-</code></pre><h3 id="6-设置NAT规则">6.设置NAT规则</h3><pre><code>sudo iptables -t nat -A POSTROUTING -s <span class="number">192.168</span><span class="number">.0</span><span class="number">.0</span>/<span class="number">24</span> -o eth0 -j MASQUERADE
-</code></pre><p>注意：如果你在第三部设置了跟我不一样的remoteip，那么这里也要作相应的更改。</p>
-<h2 id="至此，PPTP_VPN服务器就已经架好了。">至此，PPTP VPN服务器就已经架好了。</h2>	  
+<p><pre>sudo vim /etc/ppp/chap-secrets</pre><br>按以下格式添加账户，一行一个，注意空格</p>
+<p><pre>[Username] [Service] [Password] [Allowed IP Address]</pre><br>比如</p>
+<p><pre>ss pptpd sspwd *</pre><br>保存退出，然后重启pptpd</p>
+<p><pre>sudo /etc/init.d/pptpd restart</pre></p>
+<h3 id="5-设置ipv4包转发">5.设置ipv4包转发</h3><p>打开<code>sysctl.conf</code></p>
+<p><pre>sudo vim /etc/sysctl.conf</pre><br>找到这一行，把注释的“#”号去掉</p>
+<p><pre>#net.ipv4.ip_forward=1</pre><br>改成像这样</p>
+<p><pre>net.ipv4.ip_forward=1</pre><br>保存退出，然后重新加载这个系统服务</p>
+<p><pre>sudo sysctl -p</pre></p>
+<h3 id="6-设置NAT规则">6.设置NAT规则</h3><p><pre>sudo iptables -t nat -A POSTROUTING -s 192.168.0.0/24 -o eth0 -j MASQUERADE</pre><br>注意：如果你在第三部设置了跟我不一样的remoteip，那么这里也要作相应的更改。</p>
+<p><strong>至此，PPTP VPN服务器就已经架好了。</strong></p>
+	  
 	</div>
 
 	<div>

@@ -109,10 +109,10 @@
 
 	  <p>前段时间做了一个小项目，需要获取一个网页的HTML源码，然后在服务器上保存交给另一个数学模型处理。模型在单独测试的时候没出现什么问题，但是放到Tomcat中就突然出现了莫名其妙的错误。因为需要处理中文，经师兄提醒可能是编码的问题，于是设断<br>点到程序中查看，果然是，所有中文都变成了乱码。</p>
 <a id="more"></a>
-<p>首先，我想看看本地和Tomcat中的默认编码有什么不同，于是写了一行代码<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Charset.defaultCharset().displayName();</span><br></pre></td></tr></table></figure></p>
+<p>首先，我想看看本地和Tomcat中的默认编码有什么不同，于是写了一行代码<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Charset.defaultCharset().displayName();</span><br></pre></td></tr></table></figure></p>
 <p>果然，在本地的输出是<code>UTF-8</code>，在tomcat中的输出是<code>US-ASCII</code>。</p>
 <p>既然在本地测试可以，说明读写文件的时候只要指定正确的编码方式就好了，而不是使用系统默认的。</p>
-<p>指定方式如下，假定要读写的文件是file，要指定的编码是<code>UTF-8</code><br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Scanner = <span class="keyword">new</span> Scanner(file, <span class="string">"UTF-8"</span>);</span><br><span class="line">BufferedReader reader = <span class="keyword">new</span> Buffered(<span class="keyword">new</span> InputStreamReader(file, <span class="string">"UTF-8"</span>));</span><br><span class="line">PrintWriter writer = <span class="keyword">new</span> PrintWriter(<span class="keyword">new</span> OutputStreamWriter(<span class="keyword">new</span> FileOutputStream(saveFile), <span class="string">"UTF-8"</span>));</span><br></pre></td></tr></table></figure></p>
+<p>指定方式如下，假定要读写的文件是file，要指定的编码是<code>UTF-8</code><br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Scanner = <span class="keyword">new</span> Scanner(file, <span class="string">"UTF-8"</span>);</span><br><span class="line">BufferedReader reader = <span class="keyword">new</span> Buffered(<span class="keyword">new</span> InputStreamReader(file, <span class="string">"UTF-8"</span>));</span><br><span class="line">PrintWriter writer = <span class="keyword">new</span> PrintWriter(<span class="keyword">new</span> OutputStreamWriter(<span class="keyword">new</span> FileOutputStream(saveFile), <span class="string">"UTF-8"</span>));</span><br></pre></td></tr></table></figure></p>
 	  
 	</div>
 

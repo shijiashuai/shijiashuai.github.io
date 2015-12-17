@@ -139,7 +139,7 @@
 	
 	
 		<p>最近需要编写一个获取网页源代码的小程序，本来以为是很简单的事情，没有想到却出了一些意想不到的问题。最简单的方法，只要几行代码就能搞定了</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">HttpURLConnection connection = (HttpURLConnection) <span class="keyword">new</span> URL(<span class="string">"http://www.163.com"</span>).openConnection();</span><br><span class="line">InputStream inputStream = connection.getInputStream();</span><br><span class="line"><span class="keyword">int</span> len;</span><br><span class="line">StringBuilder stringBuilder = <span class="keyword">new</span> StringBuilder();</span><br><span class="line"><span class="keyword">byte</span>[] bytes = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">1024</span>];</span><br><span class="line"><span class="keyword">while</span> ( (len = inputStream.read(bytes)) &gt; <span class="number">0</span>) &#123;</span><br><span class="line">    stringBuilder.append(<span class="keyword">new</span> String(bytes, <span class="number">0</span>, len));</span><br><span class="line">&#125;</span><br><span class="line">connection.disconnect();</span><br><span class="line">String text = stringBuilder.toString();</span><br><span class="line">System.out.println(text);</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">HttpURLConnection connection = (HttpURLConnection) <span class="keyword">new</span> URL(<span class="string">"http://www.163.com"</span>).openConnection();</span><br><span class="line">InputStream inputStream = connection.getInputStream();</span><br><span class="line"><span class="keyword">int</span> len;</span><br><span class="line">StringBuilder stringBuilder = <span class="keyword">new</span> StringBuilder();</span><br><span class="line"><span class="keyword">byte</span>[] bytes = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">1024</span>];</span><br><span class="line"><span class="keyword">while</span> ( (len = inputStream.read(bytes)) &gt; <span class="number">0</span>) &#123;</span><br><span class="line">    stringBuilder.append(<span class="keyword">new</span> String(bytes, <span class="number">0</span>, len));</span><br><span class="line">&#125;</span><br><span class="line">connection.disconnect();</span><br><span class="line">String text = stringBuilder.toString();</span><br><span class="line">System.out.println(text);</span><br></pre></td></tr></table></figure>
 <p>很快我就发现了问题，有的网页编码是<code>UTF-8</code>，有的是<code>gb2312</code>。可是编码必须在读入之间就指定，这就有了矛盾。有没有这样一种编码，它可以无损转换到其他任何编码呢，有——<code>8859_1</code>。</p>
 	
 	</div>
@@ -376,27 +376,27 @@
 		<h4>Tag Cloud</h4>
 		<ul class="tag_box inline list-unstyled">		
 		
-			<li><a href="/tags/Shadowsocks/">Shadowsocks<span>1</span></a></li>
+			<li><a href="/tags/Apache/">Apache<span>1</span></a></li>
 		
-			<li><a href="/tags/PHP/">PHP<span>1</span></a></li>
-		
-			<li><a href="/tags/LeetCode简单题/">LeetCode简单题<span>10</span></a></li>
-		
-			<li><a href="/tags/MySQL/">MySQL<span>1</span></a></li>
+			<li><a href="/tags/VPN/">VPN<span>1</span></a></li>
 		
 			<li><a href="/tags/Linux/">Linux<span>2</span></a></li>
 		
-			<li><a href="/tags/爬虫/">爬虫<span>1</span></a></li>
+			<li><a href="/tags/LeetCode简单题/">LeetCode简单题<span>10</span></a></li>
 		
 			<li><a href="/tags/科学上网/">科学上网<span>2</span></a></li>
+		
+			<li><a href="/tags/PHP/">PHP<span>1</span></a></li>
 		
 			<li><a href="/tags/Tomcat/">Tomcat<span>1</span></a></li>
 		
 			<li><a href="/tags/Java/">Java<span>2</span></a></li>
 		
-			<li><a href="/tags/Apache/">Apache<span>1</span></a></li>
+			<li><a href="/tags/爬虫/">爬虫<span>1</span></a></li>
 		
-			<li><a href="/tags/VPN/">VPN<span>1</span></a></li>
+			<li><a href="/tags/MySQL/">MySQL<span>1</span></a></li>
+		
+			<li><a href="/tags/Shadowsocks/">Shadowsocks<span>1</span></a></li>
 		
 		 
 		</ul>
