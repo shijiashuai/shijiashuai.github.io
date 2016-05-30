@@ -42,7 +42,7 @@
 
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+  <link rel="shortcut icon" type="image/x-icon" href="/butterfly.jpg?v=0.4.5.2" />
 
 
 
@@ -67,8 +67,8 @@ HttpURLConnection connection = (HttpURLConnection) new URL(&quot;http://www.163.
 
 <script type="text/javascript" id="hexo.configuration">
   var CONFIG = {
-    scheme: 'Mist',
-    sidebar: 'post',
+    scheme: '',
+    sidebar: 'always',
     motion: false
   };
 </script>
@@ -283,11 +283,11 @@ HttpURLConnection connection = (HttpURLConnection) new URL(&quot;http://www.163.
 <a id="more"></a>
 <p>思路就是，先统一用<code>8859_1</code>获取到网页的内容，然后转换成网页本来应该有的编码。</p>
 <p>网页的编码会在<code>&lt;meta&gt;</code>标签里指定</p>
-<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">meta</span> <span class="attribute">http-equiv</span>=<span class="value">"Content-Type"</span> <span class="attribute">content</span>=<span class="value">"text/html; charset=gb2312"</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">"Content-Type"</span> <span class="attr">content</span>=<span class="string">"text/html; charset=gb2312"</span> /&gt;</span></span><br></pre></td></tr></table></figure>
 <p>使用正则表达式匹配出标签中指定的编码，改进后的代码如下。</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">decode</span><span class="params">(InputStream is)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        StringBuilder sb = <span class="keyword">new</span> StringBuilder();</span><br><span class="line">        <span class="keyword">byte</span>[] bytes = <span class="keyword">new</span> <span class="keyword">byte</span>[BLOCK_SIZE];</span><br><span class="line">        <span class="keyword">int</span> len, totalLen = <span class="number">0</span>;</span><br><span class="line">        StringBuilder tmpSb = <span class="keyword">new</span> StringBuilder();</span><br><span class="line">        String head;</span><br><span class="line">        <span class="keyword">boolean</span> found = <span class="keyword">false</span>;</span><br><span class="line">        Pattern encodingPattern = Pattern.compile(ENCODING_TAG, Pattern.CASE_INSENSITIVE);</span><br><span class="line">        String encoding = DEFAULT_ENCODING;</span><br><span class="line">        <span class="keyword">while</span> ((len = is.read(bytes)) &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            totalLen += len;</span><br><span class="line">            sb.append(stripEmptyLine(<span class="keyword">new</span> String(bytes, <span class="number">0</span>, len, <span class="string">"8859_1"</span>)));</span><br><span class="line">            <span class="keyword">if</span> (!found) &#123;</span><br><span class="line">                Matcher m = encodingPattern.matcher(sb.toString());</span><br><span class="line">                <span class="keyword">if</span> (m.find()) &#123;</span><br><span class="line">                    found = <span class="keyword">true</span>;</span><br><span class="line">                    encoding = m.group(<span class="number">1</span>);</span><br><span class="line">                    System.out.println(encoding);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> String(sb.toString().getBytes(<span class="string">"8859_1"</span>), encoding);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 <p>如此，我们就按照正确的编码方式获取到了网页的源码。 可是这还没完，我发现某些网站比较“坑”，比如 baidu.com，我获取到了这样一段东西，显然不是我想要的。</p>
-<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">html</span>&gt;</span> <span class="tag">&lt;<span class="title">meta</span> <span class="attribute">http-equiv</span>=<span class="value">"refresh"</span> <span class="attribute">content</span>=<span class="value">"0;url=http://www.baidu.com/"</span>&gt;</span> <span class="tag">&lt;/<span class="title">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span> <span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">"refresh"</span> <span class="attr">content</span>=<span class="string">"0;url=http://www.baidu.com/"</span>&gt;</span> <span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <p>其实他的意思是，0秒以后刷新，并且跳转到<code>http://www.baidu.com</code>。那么只要在获取到源码以后判断一下，如果有这样的标签就手动跳转。这次我用到了<a href="http://jsoup.org" target="_blank" rel="external">Jsoup</a>库。</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line">URL url = <span class="keyword">new</span> URL(pageURL);</span><br><span class="line">String text = <span class="keyword">null</span>;</span><br><span class="line"><span class="keyword">boolean</span> needRefresh;</span><br><span class="line">do &#123;</span><br><span class="line">    needRefresh = <span class="keyword">false</span>;</span><br><span class="line">    HttpURLConnection connection = (HttpURLConnection) url.openConnection();</span><br><span class="line">    connection.connect();</span><br><span class="line">    text = <span class="keyword">new</span> HtmlInputStreamDecoder().decode(connection.getInputStream());</span><br><span class="line">    String head = text.substring(<span class="number">0</span>, text.length()&gt;<span class="number">1000</span>?<span class="number">1000</span>:text.length());</span><br><span class="line">    Document doc = Jsoup.parse(head);</span><br><span class="line">    org.jsoup.select.Elements metas = doc.getElementsByTag(<span class="string">"meta"</span>);</span><br><span class="line">    <span class="keyword">for</span>(org.jsoup.nodes.Element meta:metas)&#123;</span><br><span class="line">        <span class="keyword">if</span> (meta.hasAttr(<span class="string">"http-equiv"</span>) &amp;&amp; meta.attr(<span class="string">"http-equiv"</span>).equals(<span class="string">"refresh"</span>)) &#123;</span><br><span class="line">            String content = meta.attr(<span class="string">"content"</span>);</span><br><span class="line">            <span class="keyword">if</span> (content.contains(<span class="string">"url"</span>)) &#123;</span><br><span class="line">                url = <span class="keyword">new</span> URL(content.split(<span class="string">";"</span>)[<span class="number">1</span>].substring(<span class="string">"url="</span>.length()));</span><br><span class="line">                needRefresh = <span class="keyword">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    connection.disconnect();</span><br><span class="line">&#125; <span class="keyword">while</span> (needRefresh);</span><br></pre></td></tr></table></figure>
 <p>这样程序就可以处理大多数网页了</p>
@@ -427,7 +427,7 @@ HttpURLConnection connection = (HttpURLConnection) new URL(&quot;http://www.163.
               </span>
             
               <span class="links-of-author-item">
-                <a href="http://vivec.co" target="_blank">
+                <a href="http://vivec.online" target="_blank">
                   
                     <i class="fa fa-vimeo"></i> Vivec's Blog
                   
@@ -485,7 +485,7 @@ HttpURLConnection connection = (HttpURLConnection) new URL(&quot;http://www.163.
         <div class="copyright" >
   
   &copy;  2014 - 
-  <span itemprop="copyrightYear">2015</span>
+  <span itemprop="copyrightYear">2016</span>
   <span class="with-love">
     <i class="icon-next-heart fa fa-heart"></i>
   </span>
@@ -499,7 +499,7 @@ HttpURLConnection connection = (HttpURLConnection) new URL(&quot;http://www.163.
 <div class="theme-info">
   主题 -
   <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
-    NexT.Mist
+    NexT
   </a>
 </div>
 
